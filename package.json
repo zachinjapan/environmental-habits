@@ -1,11 +1,15 @@
 {
   "dependencies": {
+    "@jsamr/counter-style": "^2.0.2",
+    "@jsamr/react-native-li": "^2.3.1",
+    "@react-navigation/bottom-tabs": "^6.3.1",
     "expo": "^44.0.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
     "react-native-web": "0.17.1",
-    "styled-components": "^5.1.0"
+    "styled-components": "^5.1.0",
+    "tcomb-form-native": "^0.6.20"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
