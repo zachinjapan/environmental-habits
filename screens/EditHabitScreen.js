@@ -47,40 +47,130 @@ const options = {
     identity: {
       label: "I’m the type of person who:",
       placeholder: "Your desired identity",
+
+      error: "Please enter your identity",
+
+      stylesheet: formStyles,
+
+      autoCapitalize: "none",
+
+      autoCorrect: true,
+
+      keyboardType: "default",
+
+      returnKeyType: "next",
     },
     habit: {
       label: "The habit I’ll be focusing on is: ",
       placeholder: "Habit that reinforces your desired identity",
+
+      error: "Please enter your habit",
+      autoCapitalize: "none",
+
+      autoCorrect: true,
+
+      keyboardType: "default",
+
+      returnKeyType: "next",
     },
     twoMinute: {
       label: "The two-minute version of my habit is: ",
       placeholder: "Two-minute version of your habit (first step)",
+
+      error: "Please enter your two-minute version of your habit",
+      autoCapitalize: "none",
+
+      autoCorrect: true,
+
+      keyboardType: "default",
+
+      returnKeyType: "next",
     },
     behavior: {
       label: "I will...",
       placeholder: "What will you do? (2 minute version)",
+
+      error: "Please enter what you will do",
+
+      autoCapitalize: "none",
+
+      autoCorrect: true,
+
+      keyboardType: "default",
+
+      returnKeyType: "next",
     },
     time: {
       label: "...at...",
       placeholder: "What time?",
+
+      error: "Please enter what time",
+
+      autoCapitalize: "none",
+
+      autoCorrect: true,
+
+      keyboardType: "default",
+
+      returnKeyType: "next",
     },
     location: {
       label: "...in...",
       placeholder: "Where?",
+
+      error: "Please enter where",
+
+      autoCapitalize: "none",
+
+      autoCorrect: true,
+
+      keyboardType: "default",
+
+      returnKeyType: "next",
     },
     environment1: {
       label:
-        "I will add this one part of my enviorment to make the habit more obvious: ",
+        "I will add this one part of my environment to make the habit more obvious: ",
       placeholder: "action",
+
+      error: "Please enter your action",
+
+      autoCapitalize: "none",
+
+      autoCorrect: true,
+
+      keyboardType: "default",
+
+      returnKeyType: "next",
     },
     environment2: {
       label:
-        "I will change this one part of my enviorment to make the habit more convient: ",
+        "I will change this one part of my environment to make the habit more convient: ",
       placeholder: "action",
+
+      error: "Please enter your action",
+
+      autoCapitalize: "none",
+
+      autoCorrect: true,
+
+      keyboardType: "default",
+
+      returnKeyType: "next",
     },
     want: {
       label: "If I do my habit I get to do what I want to do which is...",
       placeholder: "What do you want to do? (reward action)",
+
+      error: "Please enter what you want to do",
+
+      autoCapitalize: "none",
+
+      autoCorrect: true,
+
+      keyboardType: "default",
+
+      returnKeyType: "next",
     },
   },
   stylesheet: formStyles,
@@ -126,6 +216,8 @@ export default class EditHabitScreen extends Component {
     if (value) {
       console.log(value);
       this.multiSet(value);
+
+      this.props.navigation.navigate("MyHabitScreen");
     }
   };
 

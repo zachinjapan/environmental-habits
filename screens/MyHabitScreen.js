@@ -1,7 +1,8 @@
 import styled from "styled-components/native";
-import { View, Text, StyleSheet } from "react-native";
-import React, { useEffect } from "react";
+import { Button, View, Text, StyleSheet, navigation } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import React from "react";
 const getMultiple = async () => {
   try {
     const [
@@ -64,15 +65,18 @@ function MyHabitScreen() {
     environment2: "",
     want: "",
   });
-  useEffect(() => {
-    getMultiple().then((habit) => {
-      setHabit(habit);
-    });
-  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getMultiple().then((habit) => {
+        setHabit(habit);
+      });
+    }, [])
+  );
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text style={styles.title}>My Habit</Text>
+      <Text style={styles.title}>My Habits</Text>
       <Text style={styles.text}>I am a person who {habit.identity[1]}</Text>
       <Text style={styles.text}>I am going to {habit.habit[1]}</Text>
       <Text style={styles.text}>
