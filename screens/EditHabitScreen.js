@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, Button } from "react-native";
+import { Text, View, ScrollView, StyleSheet, Button } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import t from "tcomb-form-native"; // 0.6.9
 
@@ -12,6 +13,9 @@ const User = t.struct({
   behavior: t.String,
   time: t.String,
   location: t.String,
+  environment1: t.String,
+  environment2: t.String,
+  want: t.String,
 });
 
 const formStyles = {
@@ -50,11 +54,11 @@ const options = {
     },
     twoMinute: {
       label: "The two-minute version of my habit is: ",
-      placeholder: "Two-minute version of your habit",
+      placeholder: "Two-minute version of your habit (first step)",
     },
     behavior: {
       label: "I will...",
-      placeholder: "What will you do?",
+      placeholder: "What will you do? (2 minute version)",
     },
     time: {
       label: "...at...",
@@ -64,22 +68,107 @@ const options = {
       label: "...in...",
       placeholder: "Where?",
     },
+    environment1: {
+      label:
+        "I will add this one part of my enviorment to make the habit more obvious: ",
+      placeholder: "action",
+    },
+    environment2: {
+      label:
+        "I will change this one part of my enviorment to make the habit more convient: ",
+      placeholder: "action",
+    },
+    want: {
+      label: "If I do my habit I get to do what I want to do which is...",
+      placeholder: "What do you want to do? (reward action)",
+    },
   },
   stylesheet: formStyles,
 };
 
 export default class EditHabitScreen extends Component {
+  getMultiple = async () => {
+    let values;
+    try {
+      values = await AsyncStorage.multiGet([
+        "identity",
+        "habit",
+        "twoMinute",
+        "behavior",
+        "time",
+        "location",
+        "environment1",
+        "environment2",
+        "want",
+      ]);
+    } catch (e) {
+      // read error
+    }
+    console.log("edit habit", values);
+
+    if (values) {
+      return {
+        identity: values[0][1],
+        habit: values[1][1],
+        twoMinute: values[2][1],
+        behavior: values[3][1],
+        time: values[4][1],
+        location: values[5][1],
+        environment1: values[6][1],
+        environment2: values[7][1],
+        want: values[8][1],
+      };
+    }
+  };
+
   handleSubmit = () => {
     const value = this._form.getValue();
-    console.log("value: ", value);
+    if (value) {
+      console.log(value);
+      this.multiSet(value);
+    }
+  };
+
+  multiSet = async (formObject) => {
+    const firstPair = ["identity", formObject.identity];
+    const secondPair = ["habit", formObject.habit];
+    const thirdPair = ["twoMinute", formObject.twoMinute];
+    const fourthPair = ["behavior", formObject.behavior];
+    const fifthPair = ["time", formObject.time];
+    const sixthPair = ["location", formObject.location];
+    const seventhPair = ["environment1", formObject.environment1];
+    const eighthPair = ["environment2", formObject.environment2];
+    const ninthPair = ["want", formObject.want];
+    const pairs = [
+      firstPair,
+      secondPair,
+      thirdPair,
+      fourthPair,
+      fifthPair,
+      sixthPair,
+      seventhPair,
+      eighthPair,
+      ninthPair,
+    ];
+
+    try {
+      await AsyncStorage.multiSet(pairs);
+    } catch (e) {
+      //save error
+    }
+
+    console.log("Done.");
   };
 
   render() {
+    this.getMultiple();
     return (
-      <View style={styles.container}>
-        <Form ref={(c) => (this._form = c)} type={User} options={options} />
-        <Button title="Add Habit" onPress={this.handleSubmit} />
-      </View>
+      <ScrollView>
+        <View style={styles.container}>
+          <Form ref={(c) => (this._form = c)} type={User} options={options} />
+          <Button title="Add Habit" onPress={this.handleSubmit} />
+        </View>
+      </ScrollView>
     );
   }
 }
