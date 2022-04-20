@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, ScrollView, StyleSheet, Button } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import moment from "moment";
 import t from "tcomb-form-native"; // 0.6.9
 
 const Form = t.form.Form;
@@ -16,6 +16,9 @@ const User = t.struct({
   environment1: t.String,
   environment2: t.String,
   want: t.String,
+  currentDate: t.Date,
+  repitions: t.String,
+  desiredRepitions: t.String,
 });
 
 const formStyles = {
@@ -172,6 +175,26 @@ const options = {
 
       returnKeyType: "next",
     },
+    currentDate: {
+      label: "Today's date is: ",
+      mode: "date",
+
+      config: {
+        format: (date) => moment(date).format("YYYY-mm-d"),
+      },
+
+      error: "Please enter today's date",
+    },
+    repitions: {
+      label: "How many times have you done this habit?",
+
+      error: "Please enter how many times you have done this habit",
+    },
+    desiredRepitions: {
+      label: "How many times do you want to do this habit each day?",
+
+      error: "Please enter how many times you want to do this habit each day",
+    },
   },
   stylesheet: formStyles,
 };
@@ -190,6 +213,9 @@ export default class EditHabitScreen extends Component {
         "environment1",
         "environment2",
         "want",
+        "currentDate",
+        "repitions",
+        "desiredRepitions",
       ]);
     } catch (e) {
       // read error
@@ -207,17 +233,19 @@ export default class EditHabitScreen extends Component {
         environment1: values[6][1],
         environment2: values[7][1],
         want: values[8][1],
+        currentDate: values[9][1],
+        repitions: values[10][1],
+        desiredRepitions: values[11][1],
       };
     }
   };
 
   handleSubmit = () => {
     const value = this._form.getValue();
+
     if (value) {
       console.log(value);
       this.multiSet(value);
-
-      this.props.navigation.navigate("MyHabitScreen");
     }
   };
 
@@ -231,6 +259,9 @@ export default class EditHabitScreen extends Component {
     const seventhPair = ["environment1", formObject.environment1];
     const eighthPair = ["environment2", formObject.environment2];
     const ninthPair = ["want", formObject.want];
+    const tenthPair = ["currentDate", formObject.currentDate + "1"];
+    const eleventhPair = ["repitions", formObject.repitions];
+    const twelthPair = ["desiredRepitions", formObject.desiredRepitions];
     const pairs = [
       firstPair,
       secondPair,
@@ -241,6 +272,9 @@ export default class EditHabitScreen extends Component {
       seventhPair,
       eighthPair,
       ninthPair,
+      tenthPair,
+      eleventhPair,
+      twelthPair,
     ];
 
     try {
@@ -253,7 +287,7 @@ export default class EditHabitScreen extends Component {
   };
 
   render() {
-    this.getMultiple();
+    // this.getMultiple();
     return (
       <ScrollView>
         <View style={styles.container}>

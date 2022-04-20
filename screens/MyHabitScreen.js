@@ -15,6 +15,9 @@ const getMultiple = async () => {
       environment1,
       environment2,
       want,
+      currentDate,
+      repitions,
+      desiredRepitions,
     ] = await AsyncStorage.multiGet([
       "identity",
       "habit",
@@ -25,6 +28,9 @@ const getMultiple = async () => {
       "environment1",
       "environment2",
       "want",
+      "currentDate",
+      "repitions",
+      "desiredRepitions",
     ]);
     console.log(
       identity,
@@ -35,7 +41,10 @@ const getMultiple = async () => {
       location,
       environment1,
       environment2,
-      want
+      want,
+      currentDate,
+      repitions,
+      desiredRepitions
     );
     return {
       identity,
@@ -47,6 +56,9 @@ const getMultiple = async () => {
       environment1,
       environment2,
       want,
+      currentDate,
+      repitions,
+      desiredRepitions,
     };
   } catch (error) {
     console.log(error);
@@ -64,15 +76,34 @@ function MyHabitScreen() {
     environment1: "",
     environment2: "",
     want: "",
+    currentDate: new Date().toLocaleDateString(),
+    repitions: 0,
+    desiredRepitions: 0,
   });
+
+  const [successRate, setSuccessRate] = React.useState(0);
 
   useFocusEffect(
     React.useCallback(() => {
       getMultiple().then((habit) => {
         setHabit(habit);
+        // calculateSuccessRate();
       });
     }, [])
   );
+
+  const calculateSuccessRate = () => {
+    let currentDate = new Date();
+    let amountOfDaysSinceStart =
+      (currentDate.getTime() - habit.currentDate.getTime()) /
+      (1000 * 60 * 60 * 24);
+    let amountOfDaysSinceStartInt = Math.floor(amountOfDaysSinceStart);
+    let idealRepitions = habit.desiredRepitions * amountOfDaysSinceStartInt;
+    let actualRepitions = habit.repitions;
+
+    // calculate success rate
+    setSuccessRate((actualRepitions / idealRepitions) * 100);
+  };
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -94,6 +125,16 @@ function MyHabitScreen() {
       <Text style={styles.text}>
         {" "}
         When I complete my habit I will {habit.want[1]}
+      </Text>
+      <Text style={styles.text}>
+        {" "}
+        I have completed {habit.repitions} out of {habit.desiredRepitions}
+      </Text>
+      <Text style={styles.text}> My success rate is {successRate}%</Text>
+      <Text>
+        {" "}
+        test {habit.currentDate[1]} {habit.repitions[1]}{" "}
+        {habit.desiredRepitions[1]}
       </Text>
     </View>
   );
