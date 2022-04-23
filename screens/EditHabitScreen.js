@@ -16,7 +16,7 @@ const User = t.struct({
   environment1: t.String,
   environment2: t.String,
   want: t.String,
-  currentDate: t.Date,
+  habitStartDate: t.Date,
   repitions: t.String,
   desiredRepitions: t.String,
 });
@@ -175,15 +175,15 @@ const options = {
 
       returnKeyType: "next",
     },
-    currentDate: {
-      label: "Today's date is: ",
+    habitStartDate: {
+      label: "Habit start ",
       mode: "date",
 
       config: {
         format: (date) => moment(date).format("YYYY-mm-d"),
       },
 
-      error: "Please enter today's date",
+      error: "Please enter habit start date",
     },
     repitions: {
       label: "How many times have you done this habit?",
@@ -213,7 +213,7 @@ export default class EditHabitScreen extends Component {
         "environment1",
         "environment2",
         "want",
-        "currentDate",
+        "habitStartDate",
         "repitions",
         "desiredRepitions",
       ]);
@@ -233,7 +233,7 @@ export default class EditHabitScreen extends Component {
         environment1: values[6][1],
         environment2: values[7][1],
         want: values[8][1],
-        currentDate: values[9][1],
+        habitStartDate: values[9][1],
         repitions: values[10][1],
         desiredRepitions: values[11][1],
       };
@@ -259,7 +259,7 @@ export default class EditHabitScreen extends Component {
     const seventhPair = ["environment1", formObject.environment1];
     const eighthPair = ["environment2", formObject.environment2];
     const ninthPair = ["want", formObject.want];
-    const tenthPair = ["currentDate", formObject.currentDate + "1"];
+    const tenthPair = ["habitStartDate", formObject.habitStartDate + "1"];
     const eleventhPair = ["repitions", formObject.repitions];
     const twelthPair = ["desiredRepitions", formObject.desiredRepitions];
     const pairs = [

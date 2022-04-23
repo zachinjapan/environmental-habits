@@ -87,22 +87,52 @@ function MyHabitScreen() {
     React.useCallback(() => {
       getMultiple().then((habit) => {
         setHabit(habit);
-        // calculateSuccessRate();
+        calculateSuccessRate();
       });
     }, [])
   );
 
+  // increment repitions
+  const incrementRepitions = () => {
+    // increment repitions in AsyncStorage
+    AsyncStorage.getItem("repitions").then((repitions) => {
+      let newRepitions = parseInt(repitions) + 1;
+      AsyncStorage.setItem("repitions", newRepitions.toString());
+      console.log("increment repitions", newRepitions);
+    });
+
+    // update useState
+    setHabit((prevState) => {
+      return {
+        ...prevState,
+        repitions: ["repitions", parseInt(prevState.repitions[1]) + 1],
+      };
+    });
+  };
+
   const calculateSuccessRate = () => {
     let currentDate = new Date();
-    let amountOfDaysSinceStart =
-      (currentDate.getTime() - habit.currentDate.getTime()) /
-      (1000 * 60 * 60 * 24);
-    let amountOfDaysSinceStartInt = Math.floor(amountOfDaysSinceStart);
-    let idealRepitions = habit.desiredRepitions * amountOfDaysSinceStartInt;
-    let actualRepitions = habit.repitions;
+    let desiredRepitions = parseInt(habit.desiredRepitions[1]);
+    let currentRepitions = parseInt(habit.repitions[1]);
+    let habitStartDate = habit.currentDate[1];
+    habitStartDate = habitStartDate.slice(0, habitStartDate.length - 1);
+    habitStartDate = new Date(habitStartDate);
+    let diff = currentDate - habitStartDate;
+    diff = diff / (1000 * 60 * 60 * 24);
+    diff = Math.round(diff);
 
-    // calculate success rate
-    setSuccessRate((actualRepitions / idealRepitions) * 100);
+    let idealSuccessRate = desiredRepitions * diff;
+
+    let successRate = currentRepitions / idealSuccessRate;
+
+    successRate = Math.round(successRate * 100);
+
+    // round successRate to less than 100
+    if (successRate > 100) {
+      successRate = 100;
+    }
+
+    setSuccessRate(successRate);
   };
 
   return (
@@ -128,14 +158,10 @@ function MyHabitScreen() {
       </Text>
       <Text style={styles.text}>
         {" "}
-        I have completed {habit.repitions} out of {habit.desiredRepitions}
+        Number of repitions: {habit.repitions[1]}
       </Text>
       <Text style={styles.text}> My success rate is {successRate}%</Text>
-      <Text>
-        {" "}
-        test {habit.currentDate[1]} {habit.repitions[1]}{" "}
-        {habit.desiredRepitions[1]}
-      </Text>
+      <Button title="Complete Habit" onPress={incrementRepitions} />
     </View>
   );
 }
