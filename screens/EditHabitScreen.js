@@ -17,8 +17,8 @@ const User = t.struct({
   environment2: t.String,
   want: t.String,
   habitStartDate: t.Date,
-  repitions: t.String,
-  desiredRepitions: t.String,
+  repitions: t.Number,
+  desiredRepitions: t.Number,
 });
 
 const formStyles = {
